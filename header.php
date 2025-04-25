@@ -12,7 +12,7 @@
   <meta name="description" content="" />
   <meta name="author" content="" />
 
-  <title>Esigned</title>
+  <!-- <title>Esigned</title> -->
 
   <!-- slider stylesheet -->
   <!-- slider stylesheet -->
@@ -30,8 +30,9 @@
       <div class="container-fluid">
         <nav class="navbar navbar-expand-lg custom_nav-container pt-3">
           <a class="navbar-brand" href="<?=site_url()?>">
-            <span>
-              Esigned
+            <span class="col-2">
+              <!-- Esigned -->
+               <?php //the_custom_logo() ?>
             </span>
           </a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

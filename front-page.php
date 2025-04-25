@@ -5,31 +5,46 @@
     <section class=" slider_section position-relative">
       <div class="container">
         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+          <?php $repeater_data = get_post_meta(get_the_ID(), 'hero_slider_repeater_data', true);
+          if (!empty($repeater_data)):
+          ?>
           <ol class="carousel-indicators">
-            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+            <?php foreach ($repeater_data as $key => $data): 
+              $active = '';
+              if ($key == 0) {
+                $active = 'active';
+              }
+            ?>
+            <li data-target="#carouselExampleIndicators" data-slide-to="<?=$key?>" class="<?=$active?>"></li>
+            <?php endforeach; endif;?>
           </ol>
-          <div class="carousel-inner">
-            <div class="carousel-item active">
+           <div class="carousel-inner">
+          <?php
+          if (!empty($repeater_data)):
+            foreach ($repeater_data as $key => $data):
+              $active = '';
+              if ($key == 0) {
+                $active = 'active';
+              }
+          ?>
+         
+            <div class="carousel-item <?=$active?>">
               <div class="row">
                 <div class="col">
                   <div class="detail-box">
                     <div>
                       <h2>
-                        welcome to
-
+                       <?=$data['top_heading']?>
                       </h2>
                       <h1>
-                        web agency
+                        <?= $data['major_heading'] ?>
                       </h1>
                       <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore
+                        <?= $data['paragraph'] ?>
                       </p>
                       <div class="">
-                        <a href="">
-                          Contact us
+                        <a href="<?= $data['button_url'] ?>">
+                          <?= $data['button_text'] ?>
                         </a>
                       </div>
                     </div>
@@ -37,58 +52,8 @@
                 </div>
               </div>
             </div>
-            <div class="carousel-item">
-              <div class="row">
-                <div class="col">
-                  <div class="detail-box">
-                    <div>
-                      <h2>
-                        welcome to
-
-                      </h2>
-                      <h1>
-                        web agency
-                      </h1>
-                      <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore
-                      </p>
-                      <div class="">
-                        <a href="">
-                          Contact us
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="carousel-item">
-              <div class="row">
-                <div class="col">
-                  <div class="detail-box">
-                    <div>
-                      <h2>
-                        welcome to
-
-                      </h2>
-                      <h1>
-                        web agency
-                      </h1>
-                      <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore
-                      </p>
-                      <div class="">
-                        <a href="">
-                          Contact us
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          
+          <?php endforeach; endif; ?>
           </div>
         </div>
 
@@ -96,7 +61,6 @@
     </section>
     <!-- end slider section -->
   </div>
-
   <!-- do section -->
 
   <section class="do_section layout_padding">
