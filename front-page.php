@@ -70,8 +70,7 @@
           What we do
         </h2>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-          magna
+          <?=the_content()?>
         </p>
       </div>
       <div class="do_container">
@@ -141,63 +140,31 @@
       </div>
       <div class="carousel-wrap ">
         <div class="owl-carousel">
+
+        <?php $review_sliders = get_option("review_slider_repeater_field") ?>  
+        <?php if (!empty($review_sliders)): ?> 
+        <?php foreach ($review_sliders as $key => $slider): ?>  
           <div class="item">
             <div class="box">
               <div class="img-box">
-                <img src="<?php echo get_template_directory_uri()?>/assets/images/c-1.png" alt="">
+                <img src="<?= wp_get_attachment_url((int) $slider['image_id']) ?>" alt="">
               </div>
               <div class="detail-box">
                 <h5>
-                  Tempor incididunt <br>
+                  <?=$slider['heading']?> <br>
                   <span>
-                    Dipiscing elit
+                    <?= $slider['sub_heading'] ?>
                   </span>
                 </h5>
                 <img src="<?php echo get_template_directory_uri()?>/assets/images/quote.png" alt="">
                 <p>
-                  Dipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+                  <?=$slider['paragraph'] ?>
                 </p>
               </div>
             </div>
           </div>
-          <div class="item">
-            <div class="box">
-              <div class="img-box">
-                <img src="<?php echo get_template_directory_uri()?>/assets/images/c-2.png" alt="">
-              </div>
-              <div class="detail-box">
-                <h5>
-                  Tempor incididunt <br>
-                  <span>
-                    Dipiscing elit
-                  </span>
-                </h5>
-                <img src="<?php echo get_template_directory_uri()?>/assets/images/quote.png" alt="">
-                <p>
-                  Dipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="box">
-              <div class="img-box">
-                <img src="<?php echo get_template_directory_uri()?>/assets/images/c-3.png" alt="">
-              </div>
-              <div class="detail-box">
-                <h5>
-                  Tempor incididunt <br>
-                  <span>
-                    Dipiscing elit
-                  </span>
-                </h5>
-                <img src="<?php echo get_template_directory_uri()?>/assets/images/quote.png" alt="">
-                <p>
-                  Dipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                </p>
-              </div>
-            </div>
-          </div>
+          <!-- Item end -->
+          <?php endforeach; endif; ?>  
         </div>
       </div>
     </div>
@@ -211,41 +178,41 @@
       <div class="row">
         <div class="col-md-3 col-sm-6">
           <div class="detail-box">
-            <h2>
-              1000+
+            <h2 class="eagle_metric_first_value_text">
+              <?=esc_html__(get_theme_mod("eagle_metric_first_value_text"));?>
             </h2>
-            <h5>
-              Years of Business
+            <h5 class="eagle_metric_first_desc_value_text">
+            <?= esc_html__(get_theme_mod("eagle_metric_first_desc_value_text")); ?>
             </h5>
           </div>
         </div>
         <div class="col-md-3 col-sm-6">
           <div class="detail-box">
-            <h2>
-              20000+
+            <h2 class="eagle_metric_second_value_text">
+              <?= esc_html__(get_theme_mod("eagle_metric_second_value_text")); ?>
             </h2>
-            <h5>
-              Projects Delivered
+            <h5 class="eagle_metric_second_desc_value_text">
+              <?= esc_html__(get_theme_mod("eagle_metric_second_desc_value_text")); ?>
             </h5>
           </div>
         </div>
         <div class="col-md-3 col-sm-6">
           <div class="detail-box">
-            <h2>
-              10000+
+            <h2 class="eagle_metric_third_value_text">
+              <?= esc_html__(get_theme_mod("eagle_metric_third_value_text")); ?>
             </h2>
-            <h5>
-              Satisfied Customers
+            <h5 class="eagle_metric_third_desc_value_text">
+            <?= esc_html__(get_theme_mod("eagle_metric_third_desc_value_text")); ?>
             </h5>
           </div>
         </div>
         <div class="col-md-3 col-sm-6">
           <div class="detail-box">
-            <h2>
-              1500+
+            <h2 class="eagle_metric_forth_value_text">
+            <?= esc_html__(get_theme_mod("eagle_metric_forth_value_text")); ?>
             </h2>
-            <h5>
-              Cups of Coffee
+            <h5 class="eagle_metric_forth_desc_value_text">
+              <?= esc_html__(get_theme_mod("eagle_metric_forth_desc_value_text")); ?>
             </h5>
           </div>
         </div>

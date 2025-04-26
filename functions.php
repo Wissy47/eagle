@@ -67,7 +67,6 @@ add_action('add_meta_boxes', 'add_hero_slider_metabox');
 /**
  * Fires when enqueuing scripts for all admin pages.
  *
- * @param string $hook_suffix The current admin page.
  */
 add_action("admin_enqueue_scripts",function(): void {
     wp_enqueue_script('eagle-admin-script', get_template_directory_uri() . '/assets/js/admin.js', array('jquery'), false, true);
@@ -92,7 +91,7 @@ function hero_slider_repeater_callback()
                         <input type="text" name="hero_slider_repeater_data[<?php echo $index; ?>][button_url]" placeholder="Button URL"  value="<?php echo $data['button_url']; ?>">
                         <button class="remove-row">Remove</button>
                     </div>
-                            <?php
+                    <?php
                 }
             } else {
                 ?>
@@ -107,31 +106,10 @@ function hero_slider_repeater_callback()
                     <?php
             }
             ?>
-            <button id="add-row">Add Row</button>
         </div>
-        <script>
-            jQuery(document).ready(function ($) {
-                var index = <?php echo !empty($repeater_data) ? count($repeater_data) : 1; ?>;
-                $('#add-row').click(function (e) {
-                    e.preventDefault();
-                    var row =
-                    `<div class="hero_slider-repeater-row">
-                        <input type="text" name="hero_slider_repeater_data[${index}][top_heading]" placeholder="Top Heading" value="">
-                        <input type="text" name="hero_slider_repeater_data[${index}][major_heading]" placeholder="Major Heading" value="">
-                        <input type="text" name="hero_slider_repeater_data[${index}][paragraph]" placeholder="Paragraph" value="">
-                        <input type="text" name="hero_slider_repeater_data[${index}][button_text]" placeholder="Button text" value="">
-                        <input type="text" name="hero_slider_repeater_data[${index}][button_url]" placeholder="Button URL" value="">
-                        <button class="remove-row">Remove</button>
-                    </div>`;
-                    $('#hero_slider-repeater-container').append(row);
-                    index++;
-                });
-                $(document).on('click', '.remove-row', function (e) {
-                    e.preventDefault();
-                    $(this).closest('.hero_slider-repeater-row').remove();
-                });
-            });
-        </script>
+        <div>
+            <button id="add-hero-slider-row">Add Row</button>
+        </div>
         <?php
 }
 
@@ -153,3 +131,281 @@ function save_hero_slider_repeater_data($post_id)
     }
 }
 add_action('save_post', 'save_hero_slider_repeater_data');
+
+
+function create_review_slider_admin_menu() {
+    add_theme_page(
+        'Review Slider',
+        'Review Slider',
+        'manage_options',
+        'review_slider-menu',
+        'review_slider_menu_callback'
+    );
+}
+
+add_action('admin_menu', 'create_review_slider_admin_menu');
+
+function review_slider_menu_callback() {
+    settings_errors();
+    ?>
+    <div class="wrap">
+        <h1>Review Slider</h1>
+        <form method="post" action="options.php">
+            <?php settings_fields('review_slider-menu-group'); ?>
+            <?php do_settings_sections('review_slider-menu'); ?>
+            <?php submit_button(); ?>
+        </form>
+    </div>
+    <?php
+}
+
+function review_slider_menu_settings() {
+    add_settings_section(
+        'review_slider_menu_section',
+        'Slider Repeater Field',
+        'review_slider_menu_section_callback',
+        'review_slider-menu'
+    );
+
+    add_settings_field(
+        'review_slider_repeater_field',
+        'Repeater Fields',
+        'review_slider_repeater_field_callback',
+        'review_slider-menu',
+        'review_slider_menu_section'
+    );
+
+    register_setting('review_slider-menu-group', 'review_slider_repeater_field');
+}
+add_action('admin_init', 'review_slider_menu_settings');
+
+
+function review_slider_menu_section_callback()
+{
+    echo 'Add repeater field items:';
+}
+
+function review_slider_repeater_field_callback()
+{
+    $repeater_data = get_option('review_slider_repeater_field');
+    ?>
+        <div id="review_slider-repeater-container">
+            <?php
+            if (!empty($repeater_data)) {
+                foreach ($repeater_data as $index => $data) {
+                    ?>
+                            <div class="review_slider-repeater-row">
+                                <div style="margin-bottom:5px">
+                                    <input type="hidden" name="review_slider_repeater_field[<?php echo $index; ?>][image_id]"
+                                        value="<?php echo $data['image_id']; ?>" class="image-id">
+                                    <img src="<?php echo wp_get_attachment_url((int)$data['image_id']); ?>" width="100">
+                                    <button class="upload-image-button button">Upload Image</button>
+                                </div>
+                                <input type="text" name="review_slider_repeater_field[<?php echo $index; ?>][heading]" placeholder="Heading" value="<?php echo $data['heading']; ?>">
+                                <input type="text" name="review_slider_repeater_field[<?php echo $index; ?>][sub_heading]" placeholder="Sub heading" value="<?php echo $data['sub_heading']; ?>">
+                                <input type="text" name="review_slider_repeater_field[<?php echo $index; ?>][paragraph]" placeholder="Paragraph" value="<?php echo $data['paragraph']; ?>">
+                                <button class="remove-row button">Remove</button>
+                            </div>
+                            <?php
+                }
+            } else {
+                ?>
+                    <div class="review_slider-repeater-row">
+                        <div style="margin-bottom:5px">
+                            <input type="hidden" name="review_slider_repeater_field[0][image_id]" value="" class="image-id">
+                            <img src="" width="100" style="display:none;">
+                            <button class="upload-image-button button">Upload Image</button>
+                        </div>
+                        <input type="text" name="review_slider_repeater_field[0][heading]" placeholder="Heading" value="">
+                        <input type="text" name="review_slider_repeater_field[0][sub_heading]" placeholder="Sub heading" value="">
+                        <input type="text" name="review_slider_repeater_field[0][paragraph]" placeholder="Paragraph" value="">
+                        <button class="remove-row button">Remove</button>
+                    </div>
+                    <?php
+            }
+            ?>
+        </div>
+        <div style="margin-top:5px">
+            <button class="button button-primary" id="add-review-slider-row">Add Row</button>
+        </div>
+        <?php
+}
+
+
+function save_review_slider_repeater_data($option_name, $option_value)
+{
+    if ($option_name == 'review_slider_repeater_field') {
+        $repeater_data = array();
+        foreach ($option_value as $index => $data) {
+            if (!empty($data['heading'])) {
+                $repeater_data[$index] = array(
+                    'heading' => sanitize_text_field($data['heading']),
+                );
+            }
+            if (!empty($data['sub_heading'])) {
+                $repeater_data[$index] = array(
+                    'sub_heading' => sanitize_text_field($data['sub_heading']),
+                );
+            }
+            if (!empty($data['paragraph'])) {
+                $repeater_data[$index] = array(
+                    'paragraph' => sanitize_text_field($data['paragraph']),
+                );
+            }
+            // if (!empty($data['image_id'])) {
+            //     $repeater_data[$index] = array(
+            //         'image_id' => sanitize_text_field($data['image_id']),
+            //     );
+            // }
+        }
+        update_option('review_slider_repeater_field', $repeater_data);
+    }
+}
+add_filter('pre_update_option_save_review_slider_repeater_data', 'save_review_slider_repeater_data', 10, 2);
+
+
+function metric_custumizer($wp_customize) {
+    $wp_customize->add_section('eagle_homepage_metrics', array(
+        'title' => __('Our Metrics'),
+        'priority' => 3,
+    ));
+
+    // ---First area ----
+    $wp_customize->add_setting('eagle_metric_first_value_text', array(
+        'default' => '1000+',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    $wp_customize->add_control('eagle_metric_first_value_text', array(
+        'label' => __('First Area Value', 'eagle'),
+        'section' => 'eagle_homepage_metrics',
+        'settings' => 'eagle_metric_first_value_text',
+    ));
+
+    $wp_customize->selective_refresh->add_partial('eagle_metric_first_value_text', array(
+        'selector' => '.eagle_metric_first_value_text'
+    ));
+
+    $wp_customize->add_setting('eagle_metric_first_desc_value_text', array(
+        'default' => 'Years of Business',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    $wp_customize->add_control('eagle_metric_first_desc_value_text', array(
+        'label' => __('First Area Desc', 'eagle'),
+        'section' => 'eagle_homepage_metrics',
+        'settings' => 'eagle_metric_first_desc_value_text',
+    ));
+    $wp_customize->selective_refresh->add_partial('eagle_metric_first_desc_value_text', array(
+        'selector' => '.eagle_metric_first_desc_value_text'
+    ));
+
+    // ---Second area ----
+
+    $wp_customize->add_setting('eagle_metric_second_value_text', array(
+        'default' => '20000+',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    $wp_customize->add_control('eagle_metric_second_value_text', array(
+        'label' => __('Second Area Value', 'eagle'),
+        'section' => 'eagle_homepage_metrics',
+        'settings' => 'eagle_metric_second_value_text',
+    ));
+
+    $wp_customize->selective_refresh->add_partial('eagle_metric_second_value_text', array(
+        'selector' => '.eagle_metric_second_value_text'
+    ));
+
+    $wp_customize->add_setting('eagle_metric_second_desc_value_text', array(
+        'default' => 'Projects Delivered',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    $wp_customize->add_control('eagle_metric_second_desc_value_text', array(
+        'label' => __('Second Area Desc', 'eagle'),
+        'section' => 'eagle_homepage_metrics',
+        'settings' => 'eagle_metric_second_desc_value_text',
+    ));
+
+    $wp_customize->selective_refresh->add_partial('eagle_metric_second_desc_value_text', array(
+        'selector' => '.eagle_metric_second_desc_value_text'
+    ));
+
+
+    // ---Third area ----
+
+    $wp_customize->add_setting('eagle_metric_third_value_text', array(
+        'default' => '10000+',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    $wp_customize->add_control('eagle_metric_third_value_text', array(
+        'label' => __('Third Area Value', 'eagle'),
+        'section' => 'eagle_homepage_metrics',
+        'settings' => 'eagle_metric_third_value_text',
+    ));
+
+    $wp_customize->selective_refresh->add_partial('eagle_metric_third_value_text', array(
+        'selector' => '.eagle_metric_third_value_text'
+    ));
+
+    $wp_customize->add_setting('eagle_metric_third_desc_value_text', array(
+        'default' => 'Satisfied Customers',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    $wp_customize->add_control('eagle_metric_third_desc_value_text', array(
+        'label' => __('Third Area Desc', 'eagle'),
+        'section' => 'eagle_homepage_metrics',
+        'settings' => 'eagle_metric_third_desc_value_text',
+    ));
+
+    $wp_customize->selective_refresh->add_partial('eagle_metric_third_desc_value_text', array(
+        'selector' => '.eagle_metric_third_desc_value_text'
+    ));
+
+    // ---Forth area ----
+
+    $wp_customize->add_setting('eagle_metric_forth_value_text', array(
+        'default' => '1500+',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    $wp_customize->add_control('eagle_metric_forth_value_text', array(
+        'label' => __('Forth Area Value', 'eagle'),
+        'section' => 'eagle_homepage_metrics',
+        'settings' => 'eagle_metric_forth_value_text',
+    ));
+
+    $wp_customize->selective_refresh->add_partial('eagle_metric_forth_value_text', array(
+        'selector' => '.eagle_metric_forth_value_text'
+    ));
+
+    $wp_customize->add_setting('eagle_metric_forth_desc_value_text', array(
+        'default' => 'Cups of Coffee',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    $wp_customize->add_control('eagle_metric_forth_desc_value_text', array(
+        'label' => __('Forth Area Desc', 'eagle'),
+        'section' => 'eagle_homepage_metrics',
+        'settings' => 'eagle_metric_forth_desc_value_text',
+    ));
+
+    $wp_customize->selective_refresh->add_partial('eagle_metric_forth_desc_value_text', array(
+        'selector' => '.eagle_metric_forth_desc_value_text'
+    ));
+
+    
+}
+
+add_action("customize_register", 'metric_custumizer' );
+
+// /**
+//  * Fires once WordPress has loaded, allowing scripts and styles to be initialized.
+//  *
+//  * @param \WP_Customize_Manager $manager WP_Customize_Manager instance.
+//  */
+// function action_customize_register(\WP_Customize_Manager $manager) : void {
+// }
