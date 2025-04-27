@@ -3,16 +3,16 @@
     <div class="container">
       <div class="row">
         <div class="col-md-3">
-          <div class="info_contact">
+          <div class="info_contact eagle_footer_section_address">
             <h5>
-              About Shop
+              <?= esc_html__(get_theme_mod("eagle_footer_section_title")); ?>
             </h5>
             <div>
               <div class="img-box">
                 <img src="<?= get_template_directory_uri() ?>/assets/images/location-white.png" width="18px" alt="">
               </div>
               <p>
-                Address
+                <?= esc_html__(get_theme_mod("eagle_footer_section_address")); ?>
               </p>
             </div>
             <div>
@@ -20,7 +20,7 @@
                 <img src="<?= get_template_directory_uri() ?>/assets/images/telephone-white.png" width="12px" alt="">
               </div>
               <p>
-                +01 1234567890
+              <?= esc_html__(get_theme_mod("eagle_footer_section_phone")); ?>
               </p>
             </div>
             <div>
@@ -28,19 +28,16 @@
                 <img src="<?= get_template_directory_uri() ?>/assets/images/envelope-white.png" width="18px" alt="">
               </div>
               <p>
-                demo@gmail.com
+                <?= esc_html__(get_theme_mod("eagle_footer_section_email")); ?>
               </p>
             </div>
           </div>
         </div>
         <div class="col-md-3">
-          <div class="info_info">
-            <h5>
-              Informations
-            </h5>
-            <p>
-              ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-            </p>
+          <div class="footer-widget-area">
+            <?php if (is_active_sidebar('footer-widget')): ?>
+              <?php dynamic_sidebar('footer-widget'); ?>
+            <?php endif; ?>
           </div>
         </div>
 

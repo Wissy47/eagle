@@ -397,15 +397,82 @@ function metric_custumizer($wp_customize) {
         'selector' => '.eagle_metric_forth_desc_value_text'
     ));
 
+    /**
+     * Footer Section One
+     */
+
+    
+    $wp_customize->add_section('eagle_footer_section_one', array(
+        'title' => __('Footer 1'),
+        'priority' => 100,
+    ));
+
+    $wp_customize->selective_refresh->add_partial('eagle_footer_section_address', array(
+        'selector' => '.eagle_footer_section_address'
+    ));
+
+    //  Section Title
+    $wp_customize->add_setting('eagle_footer_section_title', array(
+        'default' => __('Contact Us', 'eagle'),
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    $wp_customize->add_control('eagle_footer_section_title', array(
+        'label' => 'Section title',
+        'section' => 'eagle_footer_section_one',
+        'settings' => 'eagle_footer_section_title',
+    ));
+
+    //  Address
+    $wp_customize->add_setting('eagle_footer_section_address', array(
+        'default' => __('Your business address, State', 'eagle'),
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    $wp_customize->add_control('eagle_footer_section_address', array(
+        'label' => 'Address',
+        'section'=>'eagle_footer_section_one',
+        'settings' => 'eagle_footer_section_address',
+    ));
+
+    //  Phone
+    $wp_customize->add_setting('eagle_footer_section_phone', array(
+        'default' => __('+01 1234567890', 'eagle'),
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    $wp_customize->add_control('eagle_footer_section_phone', array(
+        'label' => 'Phone',
+        'section' => 'eagle_footer_section_one',
+        'settings' => 'eagle_footer_section_phone',
+    ));
+
+    //  Email
+    $wp_customize->add_setting('eagle_footer_section_email', array(
+        'default' => __('demo@gmail.com', 'eagle'),
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    $wp_customize->add_control('eagle_footer_section_email', array(
+        'label' => 'Email',
+        'section' => 'eagle_footer_section_one',
+        'settings' => 'eagle_footer_section_email',
+    ));
     
 }
 
 add_action("customize_register", 'metric_custumizer' );
 
-// /**
-//  * Fires once WordPress has loaded, allowing scripts and styles to be initialized.
-//  *
-//  * @param \WP_Customize_Manager $manager WP_Customize_Manager instance.
-//  */
-// function action_customize_register(\WP_Customize_Manager $manager) : void {
-// }
+function register_footer_widget()
+{
+    register_sidebar(array(
+        'name' => 'Footer Widget',
+        'id' => 'footer-widget',
+        'before_widget' => '<div class="footer-widget">',
+        'after_widget' => '</div>',
+    ));
+}
+add_action('widgets_init', 'register_footer_widget');
+
+//shortcode?
+
