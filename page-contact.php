@@ -17,18 +17,20 @@
           <div class="row">
             <div class="col-md-9 mx-auto">
               <div class="contact-form">
-                <form action="">
+                <p id="contact-error" class="text-center text-danger"></p>
+              <p id="contact-success" class="text-center text-success"></p>
+                <form id="contact-form">
                   <div>
-                    <input type="text" placeholder="Full Name ">
+                    <input type="text" name="name" placeholder="Full Name ">
                   </div>
                   <div>
-                    <input type="text" placeholder="Phone Number">
+                    <input type="text" name="phone" placeholder="Phone Number">
                   </div>
                   <div>
-                    <input type="email" placeholder="Email Address">
+                    <input type="email" name="email" placeholder="Email Address">
                   </div>
                   <div>
-                    <input type="text" placeholder="Message" class="input_message">
+                    <input type="text" name="message" placeholder="Message" class="input_message">
                   </div>
                   <div class="d-flex justify-content-center">
                     <button type="submit" class="btn_on-hover">

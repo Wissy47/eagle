@@ -657,3 +657,57 @@ function eagle_save_gallery_meta_box($post_id)
     }
 }
 add_action('save_post', 'eagle_save_gallery_meta_box');
+
+function eagle_create_contact_post_type()
+{
+    register_post_type(
+        'contact',
+        array(
+            'labels' => array(
+                'name' => __('Contacts'),
+                'singular_name' => __('Contact')
+            ),
+            'public' => true,
+            'has_archive' => true,
+            'supports' => array('title', 'editor', 'thumbnail')
+        )
+    );
+}
+add_action('init', 'eagle_create_contact_post_type');
+
+
+add_action("wp_ajax_eagle_contact_form_action",'eagle_contact_form_action' );
+add_action("wp_ajax_nopriv_eagle_contact_form_action", "eagle_contact_form_action");
+
+function eagle_contact_form_action() : void {
+    check_ajax_referer("subscriber");
+
+    if (!is_email($_POST["email"])) {
+        wp_send_json_error("Please enter a valid email address", 400);
+    }
+
+    $email = sanitize_email($_POST["email"]);
+    $name = sanitize_text_field($_POST["name"]);
+    $phone = sanitize_text_field($_POST['phone']);
+    $message = sanitize_text_field($_POST['message']);
+
+    if (empty($name)|| empty($phone)|| empty($message)) {
+        wp_send_json_error("All fields are Required", 400);
+    }
+
+    $post_id = wp_insert_post(
+        array(
+            'post_title' => $email,
+            'post_content' => "Message:=> $message \n Phone:=>  $phone \n Email:=> $name",
+            'post_type' => 'contact',
+            'post_status' => 'publish'
+        )
+    );
+
+    if (is_wp_error($post_id)) {
+        wp_send_json_error("There was an Error, Please refreash page and try again", 500);
+    }else{
+        wp_send_json_success("Thank you for contacting us. You will get an email from us shortly");
+    }
+    wp_die();
+}

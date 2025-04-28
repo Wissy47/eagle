@@ -36,12 +36,34 @@ jQuery(document).ready(function($) {
       }).fail(function (error) {
         let errorText = error.responseJSON?.data || error.responseText;
         $("#sub-error").html(error.statusText + " : " + errorText);
-        console.log(error);
       });
     });
 
-    $("#sub-email").on("focus", function(){
-       $("#sub-error").html("");
+    $("#sub-email, input").on("focus", function () {
+      $("#sub-error").html("");
+      $("#contact-error").html("");
+    });
+
+
+    $(document).on("submit", "#contact-form", function (e) {
+      e.preventDefault();
+      let form = this;
+      let formData =
+        $(this).serialize() +
+        `&action=eagle_contact_form_action&_ajax_nonce=${ajaxObj.nonce}`;
+
+      // Change ajax url value to your domain
+      let ajaxurl = ajaxObj.ajax_url; // "<?php echo home_url() ?>/wp-admin/admin-ajax.php";
+
+      // Send ajax
+      $.post(ajaxurl, formData, function (response) {
+        $("#contact-success").html(response.data);
+        form.reset();
+        $("#contact-form").hide();
+      }).fail(function (error) {
+        let errorText = error.responseJSON?.data || error.responseText;
+        $("#contact-error").html(error.statusText + " : " + errorText);
+      });
     });
 
 });
