@@ -5,7 +5,8 @@
       <div class="row">
         <div class="col-md-5">
           <div class="img-box">
-            <img src="<?=get_template_directory_uri() ?>/assets/images/who-img.jpg" alt="">
+            <?=the_post_thumbnail("full")?>
+            <!-- <img src="/assets/images/who-img.jpg" alt=""> -->
           </div>
         </div>
         <div class="col-md-7">
@@ -23,11 +24,11 @@
                 <p>!Sorry no posts here</p>
                     <?php endif; ?>
             </div>
-            <div>
+            <!-- <div>
               <a href="">
                 Read More
               </a>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
