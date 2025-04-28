@@ -17,4 +17,31 @@ jQuery(document).ready(function($) {
         }
       }
     });
+
+    $(document).on("submit", "#subscriber", function (e) {
+      e.preventDefault();
+      let form = this;
+      let formData = $(this).serialize() +
+        `&action=eagle_subscribe_form_action&_ajax_nonce=${ajaxObj.nonce}`;
+
+      // Change ajax url value to your domain
+      let ajaxurl = ajaxObj.ajax_url; // "<?php echo home_url() ?>/wp-admin/admin-ajax.php";
+
+      // Send ajax
+      $.post(ajaxurl, formData, function (response) {
+        $("#sub-success").html(response.data);
+        form.reset();
+        console.log(response);
+        // location.reload();
+      }).fail(function (error) {
+        let errorText = error.responseJSON?.data || error.responseText;
+        $("#sub-error").html(error.statusText + " : " + errorText);
+        console.log(error);
+      });
+    });
+
+    $("#sub-email").on("focus", function(){
+       $("#sub-error").html("");
+    });
+
 });

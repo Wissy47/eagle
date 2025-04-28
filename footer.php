@@ -89,26 +89,29 @@
         </div>
         <div class="col-md-3">
           <div class="info_form ">
-            <h5>
-              Newsletter
-            </h5>
-            <form action="">
-              <input type="email" placeholder="Enter your email">
-              <button>
-                Subscribe
-              </button>
+            <?php if (is_active_sidebar('footer-widget-2')): ?>
+              <?php dynamic_sidebar('footer-widget-2'); ?>
+            <?php endif; ?>
             </form>
             <div class="social_box">
-              <a href="">
+              <?php $fb = get_theme_mod("eagle_footer_social_facebook") ?>
+              <?php $fb_added = $fb==""? "fade":""; ?>
+              <a href="<?=esc_attr__($fb)?>" class="<?=$fb_added?>">
                 <img src="<?=get_template_directory_uri() ?>/assets/images/fb.png" alt="">
               </a>
-              <a href="">
+              <?php $tw = get_theme_mod("eagle_footer_social_twitter") ?>
+              <?php $tw_added = $tw == "" ? "fade" : ""; ?>
+              <a href="<?= esc_attr__($tw) ?>" class="<?= $tw_added ?>">
                 <img src="<?=get_template_directory_uri() ?>/assets/images/twitter.png" alt="">
               </a>
-              <a href="">
+              <?php $lk = get_theme_mod("eagle_footer_social_linkedin") ?>
+              <?php $lk_added = $lk == "" ? "fade" : ""; ?>
+              <a href="<?= esc_attr__($lk) ?>" class="<?= $lk_added ?>">
                 <img src="<?=get_template_directory_uri() ?>/assets/images/linkedin.png" alt="">
               </a>
-              <a href="">
+              <?php $yt = get_theme_mod("eagle_footer_social_youtube") ?>
+              <?php $yt_added = $yt == "" ? "fade" : ""; ?>
+              <a href="<?= esc_attr__($yt) ?>" class="<?= $yt_added ?>">
                 <img src="<?=get_template_directory_uri() ?>/assets/images/youtube.png" alt="">
               </a>
             </div>

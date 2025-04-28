@@ -13,6 +13,11 @@ function eagle_enqueue_css_js() {
     wp_enqueue_script('eagle-bootstrap-script', get_template_directory_uri() . '/assets/js/bootstrap.js', array('jquery'), false, true);
     wp_enqueue_script('slider-script', 'https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js',array('jquery'), false, true);
     wp_enqueue_script('eagle-script', get_template_directory_uri() . '/assets/js/script.js', array('jquery', 'slider-script'), false, true);
+    // localization
+    wp_localize_script("eagle-script","ajaxObj",[
+        "ajax_url"=>admin_url("admin-ajax.php"),
+        'nonce' => wp_create_nonce('subscriber'),
+    ]);
 }
 add_action('wp_enqueue_scripts', 'eagle_enqueue_css_js');
 
@@ -458,6 +463,62 @@ function metric_custumizer($wp_customize) {
         'section' => 'eagle_footer_section_one',
         'settings' => 'eagle_footer_section_email',
     ));
+
+    /**
+     * Socials
+     */
+    $wp_customize->add_section('eagle_footer_socials', array(
+        'title' => __('Socials'),
+        'priority' => 100,
+    ));
+
+    //  Facebook
+    $wp_customize->add_setting('eagle_footer_social_facebook', array(
+        'default' => __('#', 'eagle'),
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    $wp_customize->add_control('eagle_footer_social_facebook', array(
+        'label' => 'Facebook',
+        'section' => 'eagle_footer_socials',
+        'settings' => 'eagle_footer_social_facebook',
+    ));
+
+    //  Twitter
+    $wp_customize->add_setting('eagle_footer_social_twitter', array(
+        'default' => __('#', 'eagle'),
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    $wp_customize->add_control('eagle_footer_social_twitter', array(
+        'label' => 'Twitter',
+        'section' => 'eagle_footer_socials',
+        'settings' => 'eagle_footer_social_twitter',
+    ));
+
+    //  Linkedin
+    $wp_customize->add_setting('eagle_footer_social_linkedin', array(
+        'default' => __('#', 'eagle'),
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    $wp_customize->add_control('eagle_footer_social_linkedin', array(
+        'label' => 'Linkedin',
+        'section' => 'eagle_footer_socials',
+        'settings' => 'eagle_footer_social_linkedin',
+    ));
+
+    //  Youtube
+    $wp_customize->add_setting('eagle_footer_social_youtube', array(
+        'default' => __('#', 'eagle'),
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    $wp_customize->add_control('eagle_footer_social_youtube', array(
+        'label' => 'Youtube',
+        'section' => 'eagle_footer_socials',
+        'settings' => 'eagle_footer_social_youtube',
+    ));
     
 }
 
@@ -471,8 +532,63 @@ function register_footer_widget()
         'before_widget' => '<div class="footer-widget">',
         'after_widget' => '</div>',
     ));
+
+    register_sidebar(array(
+        'name' => 'Footer Widget 2',
+        'id' => 'footer-widget-2',
+        'before_widget' => '<div>',
+        'after_widget' => '</div>',
+    ));
 }
 add_action('widgets_init', 'register_footer_widget');
 
-//shortcode?
+//shortcode
+function eagle_footer_shortcode()
+{
+    return '<h5>
+              Newsletter
+            </h5>
+            <p id="sub-error" class="text-danger"></p>
+            <p id="sub-success" class="text-success"></p>
+            <form id="subscriber">
+              <input type="text" id="sub-email" name="email" placeholder="Enter your email">
+              <button>
+                Subscribe
+          </button>';
+}
 
+add_shortcode('subscribe_form', 'eagle_footer_shortcode');
+
+add_action("wp_ajax_eagle_subscribe_form_action",'eagle_subscribe_form_action' );
+add_action("wp_ajax_nopeagle_subscribe_form_action", 'eagle_subscribe_form_action');
+
+function eagle_subscribe_form_action()  {
+    check_ajax_referer("subscriber");
+
+    if(!is_email($_POST["email"])){
+        wp_send_json_error("Please enter a valid email address", 400);
+    }
+    $email = sanitize_email($_POST["email"]);
+    $subscriber = array(
+        'user_email' => $email,
+        'user_login' => $email,
+        'role' => 'subscriber',
+    );
+
+    // Check if the user already exists
+    $user = get_user_by('email', $email);
+    if ($user) { 
+        wp_send_json_error("This email address already added", 400);
+    }
+
+    $user_id = wp_create_user($subscriber['user_login'], wp_generate_password(), $subscriber['user_email']);
+    if (!is_wp_error($user_id)) {
+            // Set the user role
+        $user = new WP_User($user_id);
+        $user->set_role('subscriber');
+        wp_send_json_success("Thank you for Subscribing to our Newsletter");
+    }else{
+        wp_send_json_error("There was an error. Please try again", 400);
+    }
+    wp_die();
+}
