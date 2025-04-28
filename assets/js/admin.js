@@ -53,4 +53,48 @@ jQuery(document).ready(function ($) {
         });
         imageFrame.open();
     });
+
+
+    $("#add-gallery-image").on("click", function (e) {
+      e.preventDefault();
+      var frame = wp.media({
+        title: "Select Images",
+        multiple: true,
+      });
+
+      frame.on("select", function () {
+        var selection = frame.state().get("selection");
+        var gallery_ids = [];
+        selection.each(function (attachment) {
+          var id = attachment.id;
+          gallery_ids.push(id);
+          var image = wp.media.attachment(id).attributes.sizes.thumbnail.url;
+          $("#gallery-images").append(
+            '<li style="width: 80px;"><img src="' +
+              image +
+              '" alt=""><input type="hidden" name="gallery_ids[]" value="' +
+              id +
+              '"></li>'
+          );
+        });
+        var ids = $("#gallery-ids").val();
+        if (ids) {
+          gallery_ids = gallery_ids.concat(ids.split(","));
+        }
+        $("#gallery-ids").val(gallery_ids.join(","));
+      });
+
+      frame.open();
+    });
+
+    $("#gallery-images").on("click", "li", function () {
+      var id = $(this).find("input").val();
+      $(this).remove();
+      var ids = $("#gallery-ids").val().split(",");
+      ids = ids.filter(function (val) {
+        return val !== id;
+      });
+      $("#gallery-ids").val(ids.join(","));
+    });
+
 });

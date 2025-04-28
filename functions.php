@@ -37,6 +37,7 @@ function eagle_register_theme_support() {
 			'flex-width'  => true,
 			'flex-height' => true,
 		));
+        add_theme_support("widgets");
 }
 add_action('after_setup_theme', 'eagle_register_theme_support');
 
@@ -592,3 +593,67 @@ function eagle_subscribe_form_action()  {
     }
     wp_die();
 }
+
+function add_gallery_meta_box()
+{
+    add_meta_box(
+        'gallery_meta_box',
+        'Gallery',
+        'gallery_meta_box_callback',
+        'page',
+        'side',
+        'low'
+    );
+}
+add_action('add_meta_boxes', 'add_gallery_meta_box');
+
+function gallery_meta_box_callback($post)
+{
+    wp_nonce_field('gallery_meta_box', 'gallery_meta_box_nonce');
+    $gallery_ids = get_post_meta($post->ID, 'gallery_ids', true);
+    ?>
+        <div id="gallery-metabox">
+            <ul id="gallery-images">
+                <?php
+                if ($gallery_ids) {
+                    $gallery_ids = explode(',', $gallery_ids);
+                    foreach ($gallery_ids as $id) {
+                        $image = wp_get_attachment_image_src($id, 'thumbnail');
+                        ?>
+                                <li style="width: 80px;">
+                                    <img src="<?php echo $image[0]; ?>" alt="">
+                                    <input type="hidden" name="gallery_ids[]" value="<?php echo $id; ?>">
+                                </li>
+                                <?php
+                    }
+                }
+                ?>
+            </ul>
+            <button class="button" id="add-gallery-image">Add Image</button>
+            <input type="hidden" id="gallery-ids" name="gallery_ids" value="<?php echo $gallery_ids; ?>">
+        </div>
+        <?php
+}
+
+function eagle_save_gallery_meta_box($post_id)
+{
+    if (!isset($_POST['gallery_meta_box_nonce']) || !wp_verify_nonce($_POST['gallery_meta_box_nonce'], 'gallery_meta_box')) {
+        return;
+    }
+
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    if (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
+
+    if (isset($_POST['gallery_ids'])) {
+        $gallery_ids = implode(',', [$_POST['gallery_ids']]);
+        update_post_meta($post_id, 'gallery_ids', $gallery_ids);
+    } else {
+        delete_post_meta($post_id, 'gallery_ids');
+    }
+}
+add_action('save_post', 'eagle_save_gallery_meta_box');
