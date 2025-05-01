@@ -38,6 +38,9 @@ function eagle_register_theme_support() {
 			'flex-height' => true,
 		));
         add_theme_support("widgets");
+
+    //Thumbnail featured image
+    add_theme_support("post-thumbnails");
 }
 add_action('after_setup_theme', 'eagle_register_theme_support');
 
