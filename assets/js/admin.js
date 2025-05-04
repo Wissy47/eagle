@@ -79,7 +79,7 @@ jQuery(document).ready(function ($) {
         });
         var ids = $("#gallery-ids").val();
         if (ids) {
-          gallery_ids = gallery_ids.concat(ids.split(","));
+          gallery_ids = [ids.split(","),...gallery_ids]; //gallery_ids.concat(ids.split(","));
         }
         $("#gallery-ids").val(gallery_ids.join(","));
       });

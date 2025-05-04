@@ -613,19 +613,19 @@ add_action('add_meta_boxes', 'add_gallery_meta_box');
 function gallery_meta_box_callback($post)
 {
     wp_nonce_field('gallery_meta_box', 'gallery_meta_box_nonce');
-    $gallery_ids = get_post_meta($post->ID, 'gallery_ids', true);
+    $get_gallery_ids = get_post_meta($post->ID, 'gallery_ids', true);
     ?>
         <div id="gallery-metabox">
             <ul id="gallery-images">
                 <?php
-                if ($gallery_ids) {
-                    $gallery_ids = explode(',', $gallery_ids);
+                if ($get_gallery_ids) {
+                    $gallery_ids = explode(',', $get_gallery_ids);
                     foreach ($gallery_ids as $id) {
                         $image = wp_get_attachment_image_src($id, 'thumbnail');
                         ?>
                                 <li style="width: 80px;">
                                     <img src="<?php echo $image[0]; ?>" alt="">
-                                    <input type="hidden" name="gallery_ids[]" value="<?php echo $id; ?>">
+                                    <input type="hidden" value="<?php echo $id; ?>">
                                 </li>
                                 <?php
                     }
@@ -633,7 +633,7 @@ function gallery_meta_box_callback($post)
                 ?>
             </ul>
             <button class="button" id="add-gallery-image">Add Image</button>
-            <input type="hidden" id="gallery-ids" name="gallery_ids" value="<?php echo $gallery_ids; ?>">
+            <input type="hidden" id="gallery-ids" name="gallery_ids" value="<?php echo $get_gallery_ids; ?>">
         </div>
         <?php
 }

@@ -23,11 +23,11 @@
         $gallery_ids = get_post_meta(get_the_ID(), 'gallery_ids', true);
         if ($gallery_ids):
           $gallery_ids = explode(',', $gallery_ids);
-          sort($gallery_ids);
+          // sort($gallery_ids);
           foreach ($gallery_ids as $ky => $id) :
             $ky++;?>
             <div class="box b-<?=$ky?>">
-                <?=wp_get_attachment_image($id, 'full');?>
+                <img src="<?=wp_get_attachment_image_url($id, "full");?>"/>
             </div>
         <?php endforeach;
         endif;
